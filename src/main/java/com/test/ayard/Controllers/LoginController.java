@@ -26,7 +26,7 @@ public class LoginController {
             msg.put("result", "success");
             return msg;
         }
-        Optional<UserInfo> result = userRepository.findById(user.getId());
+        Optional<UserInfo> result = userRepository.findByuid(user.getId());
         if(result.isEmpty()) {
             msg.put("result", "not found");
             return msg;
@@ -39,16 +39,16 @@ public class LoginController {
         msg.put("result", "wrong password");
         return msg;
     }
-    @GetMapping("/UserInfo")
-    public Map<String,Object> getUser(@RequestBody UserBean user){
-        Map<String, Object> msg = new HashMap<>();       
+    @PostMapping("/UserInfo")
+    public UserInfo getUser(@RequestBody UserBean user){
+        Map<String, Object> msg = new HashMap<>();
         Optional<UserInfo> result = userRepository.findById(user.getId());
-        if(result.isEmpty()) {
-            msg.put("result", "not found");
-            return msg;
-        }
-        msg.put("UserInfo", result.get());
-        return msg;
+//        if(result.isEmpty()) {
+//            msg.put("result", "not found");
+//            return msg;
+//        }
+//        msg.put("UserInfo", result.get());
+        return result.get();
     }
     @PostMapping("/signup")
     public Map<String, String> signUser(@RequestBody UserInfo user) {
