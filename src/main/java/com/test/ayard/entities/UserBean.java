@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserBean {
-    Integer id;
+    Long phone;
     String password;
 }

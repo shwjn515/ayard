@@ -22,7 +22,7 @@ public class UserInfo {
     @Column(name = "u_id")
     String u_id;
     @Column(name = "phone")
-    int phone;
+    Long phone;
     @Column(name = "u_address")
     String u_address;
     @Column(name = "u_name")
@@ -33,5 +33,5 @@ public class UserInfo {
     int u_class;
     @Id
     @Column(name = "id")
-    Integer id;
+    Long id;
 }

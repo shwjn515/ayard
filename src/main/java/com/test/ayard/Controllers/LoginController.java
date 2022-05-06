@@ -3,6 +3,7 @@ package com.test.ayard.Controllers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import com.test.ayard.Repositories.UserRepository;
 import com.test.ayard.entities.UserBean;
@@ -22,11 +23,11 @@ public class LoginController {
     @PostMapping("/login")
     public Map<String,String> LoginController(@RequestBody UserBean user){
         Map<String, String> msg = new HashMap<>();
-        if(user.getId().equals(0)) {
+        if(user.getPhone().equals(0)) {
             msg.put("result", "success");
             return msg;
         }
-        Optional<UserInfo> result = userRepository.findByuid(user.getId());
+        Optional<UserInfo> result = userRepository.findByuphone(user.getPhone());
         if(result.isEmpty()) {
             msg.put("result", "not found");
             return msg;
@@ -42,23 +43,47 @@ public class LoginController {
     @PostMapping("/UserInfo")
     public UserInfo getUser(@RequestBody UserBean user){
         Map<String, Object> msg = new HashMap<>();
-        Optional<UserInfo> result = userRepository.findById(user.getId());
-//        if(result.isEmpty()) {
-//            msg.put("result", "not found");
-//            return msg;
-//        }
-//        msg.put("UserInfo", result.get());
+        Optional<UserInfo> result = userRepository.findByuphone(user.getPhone());
         return result.get();
     }
     @PostMapping("/signup")
     public Map<String, String> signUser(@RequestBody UserInfo user) {
         Map<String, String> msg = new HashMap<>();
-        Optional<UserInfo> result = userRepository.findById(user.getId());
+        Optional<UserInfo> result = userRepository.findByuphone(user.getPhone());
         if(!result.isEmpty()) {
             msg.put("result", "existed");
             return msg;
         }
+        final int base = 10000;
+        int size = userRepository.getSize();
+        user.setId(Long.valueOf(base + size));
         userRepository.save(user);
+        msg.put("result", "success");
+        return msg;
+    }
+    @PostMapping("/update")
+    public Map<String, String> updateUser(@RequestBody UserInfo user) {
+        Map<String, String> msg = new HashMap<>();
+        Optional<UserInfo> result = userRepository.findByuphone(user.getPhone());
+        if(result.isEmpty()) {
+            msg.put("result", "not found");
+            return msg;
+        }
+        userRepository.save(user);
+        msg.put("result", "success");
+        return msg;
+    }
+    @PostMapping("/update-class")
+    public Map<String, String> updateUser(@RequestBody String info) {
+        Map<String, String> msg = new HashMap<>();
+        String[] data = info.split(",");
+        Optional<UserInfo> result = userRepository.findByuphone(Long.valueOf(data[0]));
+        if(result.isEmpty()) {
+            msg.put("result", "not found");
+            return msg;
+        }
+        result.get().setU_class(Integer.valueOf(data[1]));
+        userRepository.save(result.get());
         msg.put("result", "success");
         return msg;
     }

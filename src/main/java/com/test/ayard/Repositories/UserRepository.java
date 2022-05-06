@@ -15,7 +15,11 @@ import org.springframework.stereotype.Repository;
  * @author 86156
  */ //Remove @RepositoryRestResource below to disable auto REST api:
 @Repository
-public interface UserRepository extends JpaRepository<UserInfo,Integer> {
+public interface UserRepository extends JpaRepository<UserInfo,Long> {
     @Query(value = "select * from userinfo where id = ?1 ;", nativeQuery = true)
-    Optional<UserInfo> findByuid(Integer id);
+    Optional<UserInfo> findByuid(Long id);
+    @Query(value = "select * from userinfo where phone = ?1 ;", nativeQuery = true)
+    Optional<UserInfo> findByuphone(Long phone);
+    @Query(value = "select count(*) from userinfo;", nativeQuery = true)
+    int getSize();
 }
